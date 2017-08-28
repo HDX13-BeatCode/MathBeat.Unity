@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MathBeat.Game
 {
@@ -8,7 +9,7 @@ namespace MathBeat.Game
         ///<summary>The prefab that this object pool returns instances of</summary> 
         public GameObject prefab;
         ///<summary>Collection of currently inactive instances of the prefab</summary>
-        private Stack<GameObject> inactiveInstances = new Stack<GameObject>();
+        private Stack<GameObject> cachedObj = new Stack<GameObject>();
 
         ///<summary>Returns an instance of the prefab</summary>
         public GameObject GetObject()
@@ -16,15 +17,45 @@ namespace MathBeat.Game
             GameObject spawnedGameObject;
 
             // if there is an inactive instance of the prefab ready to return, return that
-            if (inactiveInstances.Count > 0)
+            if (cachedObj.Count > 0)
             {
-                // remove the instance from teh collection of inactive instances
-                spawnedGameObject = inactiveInstances.Pop();
+                // remove the instance from the collection of inactive instances
+                spawnedGameObject = cachedObj.Pop();
             }
             // otherwise, create a new instance
             else
             {
-                spawnedGameObject = Instantiate(prefab);
+                spawnedGameObject = Instantiate(prefab, transform);
+
+                // add the PooledObject component to the prefab so we know it came from this pool
+                PooledObject pooledObject = spawnedGameObject.AddComponent<PooledObject>();
+                pooledObject.pool = this;
+            }
+
+            // enable the instance
+            spawnedGameObject.SetActive(true);
+
+            // return a reference to the instance
+            // to be used later
+            return spawnedGameObject;
+        }
+
+        ///<summary>Returns an instance of the prefab</summary>
+        public GameObject GetObject(float position)
+        {
+            GameObject spawnedGameObject;
+
+            // if there is an inactive instance of the prefab ready to return, return that
+            if (cachedObj.Count > 0)
+            {
+                // remove the instance from the collection of inactive instances
+                spawnedGameObject = cachedObj.Pop();
+                spawnedGameObject.transform.position = new Vector3(position, transform.position.y);
+            }
+            // otherwise, create a new instance
+            else
+            {
+                spawnedGameObject = Instantiate(prefab, new Vector3(position, transform.position.y), prefab.transform.rotation, transform);
 
                 // add the PooledObject component to the prefab so we know it came from this pool
                 PooledObject pooledObject = spawnedGameObject.AddComponent<PooledObject>();
@@ -55,7 +86,7 @@ namespace MathBeat.Game
                 toReturn.SetActive(false);
 
                 // add the instance to the collection of inactive instances
-                inactiveInstances.Push(toReturn);
+                cachedObj.Push(toReturn);
             }
             // otherwise, just destroy it
             else

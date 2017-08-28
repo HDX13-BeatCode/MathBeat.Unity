@@ -9,6 +9,8 @@ namespace MathBeat.Core
 {
     public class GameHandler : MonoBehaviour
     {
+        public static GameHandler Game;
+
         /// <summary>
         /// Quiz database for questions and answers
         /// </summary>
@@ -40,9 +42,7 @@ namespace MathBeat.Core
         /// /Resources/Values/
         /// </summary>
         [HideInInspector]
-        const string JSON_PATH= "Values/";
-
-        string LOG_PATH;
+        const string JSON_PATH = "Values/";
 
         /// <summary>
         /// Quiz.json
@@ -72,8 +72,8 @@ namespace MathBeat.Core
             // path doesn't need "Resources/"
             //because it's loaded with Resources.Load,
             //so it's automatically runs it from the Resources folder.
-            
 
+            Game = this;
             Log.Debug(ToString() + " has awaken at " + DateTime.Now);
         }
 
@@ -84,8 +84,8 @@ namespace MathBeat.Core
             DontDestroyOnLoad(gameObject);
             //Load the splash screen
             SceneManager.LoadScene("Splash");
-            QuizSystem.Quiz = LoadJSON<Quiz>(JSON_QUIZ);
-            MusicList.MusicData = LoadJSON<MusicData>(JSON_MUSIC);
+            QuizSystem.Quiz = LoadJSON<List<Quiz>>(JSON_QUIZ);
+            LoadAllMusicData();
         }
 
         public MusicData GetCurrentMusic()
@@ -96,15 +96,24 @@ namespace MathBeat.Core
         /// <summary>
         /// Returns <see cref="List{T}"/> from JSON file
         /// </summary>
-        /// <typeparam name="T">Type to be returned as <see cref="List{T}"/></typeparam>
+        /// <typeparam name="T">Type to be returned</typeparam>
         /// <param name="jsonFileName">JSON file name</param>
-        /// <returns></returns>
-        public static List<T> LoadJSON<T>(string jsonFileName)
+        /// <returns>T object</returns>
+        public static T LoadJSON<T>(string jsonFileName)
         {
             Log.Debug("Loading {0}...", jsonFileName);
             TextAsset json = Resources.Load<TextAsset>(JSON_PATH + jsonFileName);
             Log.Debug("Parsing {0}...", jsonFileName);
-            return JsonConvert.DeserializeObject<List<T>>(json.text);
+            return JsonConvert.DeserializeObject<T>(json.text);
+        }
+
+        private void LoadAllMusicData()
+        {
+            TextAsset[] musicJSONs = Resources.LoadAll<TextAsset>(JSON_PATH);
+            foreach (var json in musicJSONs)
+            {
+                MusicList.MusicData.Add(JsonConvert.DeserializeObject<MusicData>(json.text));
+            }
         }
 
         //Update is called once per frame
@@ -113,5 +122,5 @@ namespace MathBeat.Core
 
         //}
 
-    } 
+    }
 }

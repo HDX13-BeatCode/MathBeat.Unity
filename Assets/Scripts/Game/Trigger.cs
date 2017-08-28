@@ -7,24 +7,23 @@ namespace MathBeat.Game
 {
     public class Trigger : MonoBehaviour
     {
-        //Activator1.Color = f44336
-        //Activator2.Color = FFEB3B
-        //Activator3.Color = 4CAF50
-        //Activator4.Color = 2196F3
-
+        /// <summary>
+        /// Score system
+        /// </summary>
         public Scoring ScoreSystem;
 
         /// <summary>
         /// Keyboard key mapping for PC/Web
         /// </summary>
-        public KeyCode keyPressed;
+        public KeyCode KeyPressed;
 
-        public Main MainScreen;
+        //public Main MainScreen;
+        public ObjectPool Recycler;
 
         /// <summary>
         /// Answer ID code (0/1/2/3)
         /// </summary>
-        public int answerID;
+        public int AnswerID;
 
         /// <summary>
         /// Checks if the trigger is activated,
@@ -37,73 +36,84 @@ namespace MathBeat.Game
         /// </summary>
         private GameObject currentBeat;
 
-        /// <summary>
-        /// The answer generated from the Core
-        /// </summary>
-        private string answer;
+        private Queue<GameObject> beatQueue;
 
         /// <summary>
         /// The center of the trigger area (define manually)
         /// </summary>
-        private float triggerCenter;
+        [SerializeField]
+        private float triggerCenter = -6.5f;
+
+        const string TAG = "Question";
 
         // Use this for initialization
         void Start()
         {
             ScoreSystem = FindObjectOfType<Scoring>();
-            MainScreen = FindObjectOfType<Main>();
-            triggerCenter = -6.5f;
+            Recycler = FindObjectOfType<ObjectPool>();
+            triggerCenter = FindObjectOfType<BlockSpawner>().TriggerPoint;
+            beatQueue = new Queue<GameObject>();
+            currentBeat = null;
         }
 
         // Update is called once per frame
         void Update()
-        {  
+        {
             if (isTriggered)
             {
                 if (currentBeat != null)
                 {
-                    CheckAnswer();
-                }          
-            }                  
+                    if (currentBeat.CompareTag("Question"))
+                    {
+                        CheckAnswer(currentBeat);
+                        Recycler.ReturnObject(currentBeat);
+                        //currentBeat = null;
+                    }    
+                }
+            }
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerEnter2D(Collider2D obj)
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Debug.Log("Hit now!");
-#endif
-            if (collision.gameObject.tag == "Beat")
+            Log.Debug("Hit now!");
+            if (obj.gameObject.CompareTag("Question"))
             {
-                currentBeat = collision.gameObject;
+                beatQueue.Enqueue(obj.gameObject);
+                currentBeat = beatQueue.Peek();
             }
-                
+
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
             //Debug.Break();
-            Debug.Log("Block is out of trigger!");
-            currentBeat = null;
+            Log.Debug("Block is out of trigger!");
+            
+            if (beatQueue.Count > 0)
+            {
+                beatQueue.Dequeue();
+                if (beatQueue.Count > 0)
+                    currentBeat = beatQueue.Peek();
+            }
+            else
+                currentBeat = null;
+            isTriggered = false;
         }
 
-        private void CheckAnswer()
+        private void CheckAnswer(GameObject block)
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-            //Debug.Break();
-            Debug.Log("The selected answer ID is "+ answerID.ToString());
-#endif
-            if (IsCorrect(currentBeat.GetComponent<NoteBlock>(), answerID))
+            // make sure it's off
+            isTriggered = false;
+            Log.Debug("The selected answer ID is " + AnswerID.ToString());
+            // check for answer
+            if (IsCorrect(block.GetComponent<NoteBlock>(), AnswerID))
             {
-                float delta = Mathf.Abs(triggerCenter - currentBeat.transform.position.y);
-                ScoreSystem.Respond(Scoring.CODE_HIT, delta);
+                SendHit();
             }
             else
             {
                 ScoreSystem.Respond(Scoring.CODE_WRONG);
-            }
-            MainScreen.DisposeBlock(currentBeat);
-            isTriggered = false;
-            currentBeat = null;
+            }  
         }
 
         public bool IsCorrect(NoteBlock answer, int ansId)
@@ -112,9 +122,16 @@ namespace MathBeat.Game
         }
 
         public void OnTrigger(int id)
-        { 
-            answerID = id;
-            isTriggered = true; 
+        {
+            AnswerID = id;
+            if(currentBeat != null)
+                isTriggered = true;
+        }
+
+        private void SendHit()
+        {
+            float delta = Mathf.Abs(triggerCenter - currentBeat.transform.position.y);
+            ScoreSystem.Respond(Scoring.CODE_HIT, delta, TAG);
         }
     }
 

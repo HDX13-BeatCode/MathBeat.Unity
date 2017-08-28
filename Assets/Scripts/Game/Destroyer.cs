@@ -5,14 +5,15 @@ namespace MathBeat.Game
 {
     public class Destroyer : MonoBehaviour
     {
-        public Main MainGame;
+        public ObjectPool NoteRecycler, QuestionRecycler;
+        public Scoring ScoreSystem;
         [SerializeField]
         bool destroy = false;
-        public GameObject noteBlock;
+        private GameObject beatBlock;
         // Use this for initialization
         void Start()
         {
-            MainGame = FindObjectOfType<Main>();
+            ScoreSystem = FindObjectOfType<Scoring>();
         }
 
         // Update is called once per frame
@@ -23,8 +24,19 @@ namespace MathBeat.Game
 #if UNITY_EDITOR
                 //Debug.Break();
 #endif
-                MainGame.DisposeBlock(noteBlock);
-                MainGame.ScoreSystem.Respond(Scoring.CODE_MISS);
+                switch (beatBlock.tag)
+                {
+                    case "Note":
+                        NoteRecycler.ReturnObject(beatBlock);
+                        break;
+                    case "Question":
+                        QuestionRecycler.ReturnObject(beatBlock);
+                        break;
+                    default:
+                        Destroy(beatBlock);
+                        break;
+                }
+                ScoreSystem.Respond(Scoring.CODE_MISS);
                 destroy = false;
             }
         }
@@ -35,13 +47,14 @@ namespace MathBeat.Game
             //Debug.Break();
 #endif
             destroy = true;
-            if (collision.gameObject.CompareTag("Beat"))
-                noteBlock = collision.gameObject;
+            if (collision.gameObject.CompareTag("Note") || collision.gameObject.CompareTag("Question"))
+                beatBlock = collision.gameObject;
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
+            beatBlock = null;
             destroy = false;
         }
-    } 
+    }
 }

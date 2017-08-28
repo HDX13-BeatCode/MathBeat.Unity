@@ -7,11 +7,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace MathBeat.GUI
-{ 
-    public class Button: MonoBehaviour, IPointerDownHandler
+{
+    public class Button : MonoBehaviour, IPointerDownHandler
     {
         public int AnswerID;
-        Game.Trigger TriggerBox;
+        Game.Trigger trigbox;
+        [SerializeField]
+        Game.NoteTrigger trigcircle;
+        Game.Main main;
 
         //public Image Image;
         //public float FadeDuration = .1f;
@@ -23,17 +26,25 @@ namespace MathBeat.GUI
         /// </summary>
         private void Awake()
         {
-            TriggerBox = FindObjectOfType<Game.Trigger>();
+            trigbox = FindObjectOfType<Game.Trigger>();
+            main = FindObjectOfType<Game.Main>();
         }
 
         private void OnEnable()
         {
-            TriggerBox.MainScreen.Pause += Pause_GameButton;
+            main.Pause += Pause_GameButton;
+            main.Spawner.GameOver += Spawner_GameOver;
+        }
+
+        private void Spawner_GameOver()
+        {
+            gameObject.SetActive(false);
         }
 
         private void OnDisable()
         {
-            TriggerBox.MainScreen.Pause -= Pause_GameButton;
+            main.Pause -= Pause_GameButton;
+            main.Spawner.GameOver -= Spawner_GameOver;
         }
 
         private void Pause_GameButton(bool isPaused)
@@ -44,7 +55,8 @@ namespace MathBeat.GUI
         public void OnPointerDown(PointerEventData args)
         {
             Debug.LogFormat("Button #{0} was pressed!", AnswerID);
-            TriggerBox.OnTrigger(AnswerID);
+            trigbox.OnTrigger(AnswerID);
+            trigcircle.OnTrigger();
         }
 
     }

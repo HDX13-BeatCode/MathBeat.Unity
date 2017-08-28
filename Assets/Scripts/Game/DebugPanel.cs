@@ -32,19 +32,19 @@ namespace MathBeat.Game
             if (type == LogType.Error || type == LogType.Exception)
             {
 #endif
-                if (DebugText.text.Length > 128)
-                {
-                    StringBuilder logEditor = new StringBuilder();
-                    logEditor.Append(DebugText.text);
-                    logEditor.Remove(0, DebugText.text.IndexOf('\n'));
-                    logEditor.AppendLine(message);
-                    DebugText.text = logEditor.ToString();
-                }
-                else
-                {
-                    DebugText.text += message + "\n";
-                }
+            if (DebugText.text.Length > 128)
+            {
+                StringBuilder logEditor = new StringBuilder();
+                logEditor.Append(DebugText.text);
+                logEditor.Remove(0, DebugText.text.IndexOf('\n'));
+                logEditor.AppendLine(message);
+                DebugText.text = logEditor.ToString();
             }
+            else
+            {
+                DebugText.text += message + "\n";
+            }
+        }
 #if !UNITY_EDITOR
         }
 #endif

@@ -2,13 +2,18 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using MathBeat.Core;
 using GameLog = MathBeat.Core.Log;
+using MathBeat.Game.BeatSync;
 using System;
 
 namespace MathBeat.Game
 {
+    /// <summary>
+    /// Handles the main game system, like data, score, etc
+    /// </summary>
     public class Main : MonoBehaviour
     {
         #region Fields
@@ -16,29 +21,33 @@ namespace MathBeat.Game
         [Header("DEBUG")]
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         [SerializeField]
-        private float lastNoteTime = 0;
+        //private float lastNoteTime = 0;
         public DebugPanel DebugPanel;
 
 #endif
         private bool isTest = true;
-        [SerializeField]
-        private float position = 0f;
-
-        [SerializeField]
-        private int[] TestTrackBeats = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        //[SerializeField]
+        //private float position = 0f;
 
         [SerializeField]
         private float testOffset = 1;
-        
+
         const int ms = 1000;
+
+        [SerializeField]
+        private BeatMapData testMap = new BeatMapData()
+        {
+            Difficulty = 1,
+            BeatSnap = (int)BeatValueType.Beat,
+            BeatMap = new string[] { "1130 1120", "1130 1120", "1131 1121", "1131 1121" }
+        };
+
+
+
         #endregion DEBUG
 
         #region GameplayData
         [Header("Gameplay Data")]
-        /// <summary>
-        /// The position of the current active note 
-        /// </summary>
-        public int CurrentBeat = 0;
 
         /// <summary>
         /// The BPM of the track, 
@@ -60,11 +69,14 @@ namespace MathBeat.Game
 
         public QuizSystem QuizData;
 
-        public int Difficulty = 1;
+        [Range(1,3)]
+        public int QuestionDifficulty = 1;
 
+        [Range(0,2)]
+        public int GameDifficulty = 0;
+
+        [Range(4, 16)]
         public int Speed = 4;
-
-        public float Latency = 0f;
 
         /// <summary>
         /// Time needed for a block to fall
@@ -77,29 +89,27 @@ namespace MathBeat.Game
         public AudioSource Music;
 
         /// <summary>
+        /// <see cref="Music"/>.<see cref="AudioSync"/>
+        /// </summary>
+        public AudioSync Syncer;
+
+        /// <summary>
         /// The music clip to be played
         /// </summary>
         private AudioClip music2Play;
-
-        public AudioSource FXPlayer;
 
         public Text FinalScoreText;
 
         #endregion GameplayData
 
-        #region Others
+        #region System
         /// <summary>
         /// Contains the data for the game
         /// </summary>
         [Header("Others")]
         public GameHandler GameData;
 
-        /// <summary>
-        /// A recycler for note blocks
-        /// </summary>
-        public ObjectPool cache;
-
-        public static Animator anim;
+        public BlockSpawner Spawner;
 
         public GameObject GameOverScreen;
 
@@ -111,15 +121,11 @@ namespace MathBeat.Game
         /// </summary>
         /// <param name="isPaused"></param>
         public delegate void OnPause(bool isPaused);
+
         /// <summary>
         /// What to do when the game is paused?
         /// </summary>
         public event OnPause Pause;
-
-        /// <summary>
-        /// To check if the game is running
-        /// </summary>
-        public bool IsRunning;
 
         public bool IsPlaying;
 
@@ -143,16 +149,15 @@ namespace MathBeat.Game
             try
             {
                 // preparing objects
-                Core.Log.Debug("Preparing data at " + DateTime.Now);
+                GameLog.Debug("Preparing data at " + DateTime.Now);
                 GameData = FindObjectOfType<GameHandler>(); // if this fails, go to catch line
                 music2Play = FindObjectOfType<AudioClip>();
-                
+
                 // preparing data
                 MusicData = GameData.GetCurrentMusic();
                 QuizData = GameData.QuizSystem;
-                FallTime = 16f / GameData.GameSpeed;
-                Difficulty = GameData.Difficulty;
                 Speed = GameData.GameSpeed;
+                QuestionDifficulty = GameData.Difficulty;
                 isTest = false;
 
                 LoadAudio();
@@ -167,22 +172,42 @@ namespace MathBeat.Game
                 // PS: I've set Taffy as default, so
                 // no more FileName on MusicData
                 isTest = true;
-                MusicData = new MusicData() { Title = "TestTrack", Artist = "<unknown/>", // dat html/xml!
-                    BPM = 120, Offset = testOffset, TrackBeats = TestTrackBeats };
-                QuizData.Quiz = GameHandler.LoadJSON<Quiz>("Quiz"); //epic one-liner
-                FallTime = 16f / Speed;
+                GameDifficulty = 0; // because I only have one BeatMapData: testMap
+                MusicData = new MusicData()
+                {
+                    Title = "TestTrack",
+                    Artist = "<unknown/>", // dat html/xml!
+                    BPM = 120,
+                    Offset = testOffset,
+                    MapData = new BeatMapData[] { testMap }
+                };
+                QuizData.Quiz = GameHandler.LoadJSON<List<Quiz>>("Quiz");
+
             }
             #endregion
-            #region finally
+            #region Finally
             finally
             {
                 //these lines will be executed no matter what
+                Syncer = Music.GetComponent<AudioSync>();
                 ScoreSystem = FindObjectOfType<Scoring>();
-                cache = FindObjectOfType<ObjectPool>();
-                anim = GetComponent<Animator>();
+                Spawner = FindObjectOfType<BlockSpawner>();
+                Spawner.MapData = MusicData.MapData[GameDifficulty].Maps;
+                Spawner.Speed = Speed;
+                if (!isTest)
+                    ScoreSystem.LoadHighScore(GameData.SelectedMusic);
 
                 // preparing latency
-                lateStart = MusicData.Offset > FallTime;
+                Syncer.BPM = MusicData.BPM;
+                lateStart = MusicData.Offset > 0;
+                FallTime = (Spawner.Position - Spawner.TriggerPoint) / Speed;
+                Spawner.FallTime = FallTime;
+                Syncer.TimeOffset = FallTime;
+
+                if (lateStart)
+                    Music.GetComponent<BeatPinger>().OffsetTime = MusicData.Offset;
+                else
+                    Syncer.TimeOffset += -MusicData.Offset;
             }
             #endregion
         }
@@ -193,28 +218,33 @@ namespace MathBeat.Game
         ///</summary>
         void Start()
         {
-            // playing music
-            Play();
+            IsPlaying = true;
         }
 
         #region EventHandling
         private void OnEnable()
         {
             Pause += Pause_Menu;
+            Spawner.GameOver += ShowGameOverScreen;
         }
         private void OnDisable()
         {
             Pause -= Pause_Menu;
+            Spawner.GameOver += ShowGameOverScreen;
         }
+
+        /// <summary>
+        /// Shows the pause menu
+        /// </summary>
+        /// <param name="isPaused">Is the game paused now?</param>
         private void Pause_Menu(bool isPaused)
         {
             GameLog.Debug("Game paused = " + isPaused.ToString());
             if (isPaused)
             {
-                IsPlaying = false;
-                IsRunning = false;
-                Music.Pause();
                 PausePanel.SetActive(true);
+                IsPlaying = false;
+                Music.Pause();
                 Time.timeScale = 0;
             }
             else
@@ -223,9 +253,22 @@ namespace MathBeat.Game
                 PausePanel.SetActive(false);
                 Music.UnPause();
                 IsPlaying = true;
-                IsRunning = true;
             }
         }
+
+        /// <summary>
+        /// Show the game over screen
+        /// </summary>
+        /// <returns></returns>
+        void ShowGameOverScreen()
+        {
+            //yield return new WaitForSeconds(2 * FallTime);
+            if (!isTest)
+                ScoreSystem.SaveHighScore(GameData.SelectedMusic);
+            GameOverScreen.GetComponent<UIController>().Show();
+            FinalScoreText.text = "Skor akhir: " + ScoreSystem.Score.ToString();
+        }
+
         #endregion
 
         ///<summary>
@@ -239,122 +282,13 @@ namespace MathBeat.Game
                 {
                     Pause(IsPlaying);
                 }
-                
-                if (IsPlaying)
-                {
-                    position += Time.deltaTime;
-
-                    if (position >= Music.clip.length || CurrentBeat >= MusicData.TrackBeats.Length)
-                    {
-                        //end the game
-                        Debug.Log("The game has ended.");
-                        gameOver = true;
-                        IsPlaying = false;
-                        IsRunning = false;
-                        StopCoroutine(MakeBeat());
-                        StartCoroutine(ShowGameOverScreen());
-                    }
-                }  
-            } 
+            }
         }
-
-        /////<summary>
-        /////Update is called in a fixed interval
-        /////</summary> 
-        //private void FixedUpdate()
-        //{
-        //    if (!gameOver)
-        //    {
-                
-        //    }
-        //}
         #endregion
-
-        /// <summary>
-        /// Plays the music in delay
-        /// </summary>
-        /// <returns>WaitForSeconds</returns>
-        void Play()
-        {
-            StartCoroutine(MakeBeat());
-            float delay = lateStart ? 0 : (FallTime - MusicData.Offset);
-            Music.PlayDelayed(delay);
-            IsPlaying = true;
-        }
 
         public void PlayFX(string fxName)
         {
             //FXPlayer.PlayOneShot(Resources.Load<AudioClip>(gameData.RawPath + "FX_" + fxName));
-        }
-
-        /// <summary>
-        /// An async task to spawn notes
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator MakeBeat()
-        {
-            #region Preparations
-            //set the beat speed
-            BPM = MusicData.GameBpm;
-            float speed = 240f / BPM; // (60 sec / BPM * 4 beats)
-            float latency = Latency / ms;
-            float delay = speed - latency;
-
-            // check if the game is running
-            if (!IsRunning)
-            {
-                if (lateStart)
-                    yield return new WaitForSeconds(MusicData.Offset - FallTime);
-                else
-                    yield return null;
-
-                IsRunning = true;
-            }
-            #endregion
-
-            #region Spawn
-            //var spawnPoint = new Vector2(0, 8f);
-            while (CurrentBeat < MusicData.TrackBeats.Length)
-            {
-                bool makeNote;
-                try
-                {
-                    if (MusicData.TrackBeats[CurrentBeat++] == 0)
-                        makeNote = false;
-                    else
-                        makeNote = true;
-
-                    if (makeNote)
-                    {
-                        var noteObj = cache.GetObject();
-                        noteObj.GetComponent<NoteBlock>().LoadQuestion(Difficulty);
-                        GameLog.Debug("Note #{0} generated at {1} s.\nDelay: {2}",
-                            CurrentBeat, position, position - lastNoteTime);
-                        lastNoteTime = position;
-                    }
-                }
-                catch (Exception)
-                {
-                    //Debug.LogWarning("No more beats detected.");
-                    //// end the game
-                }
-                // wait for a beat before starting over
-                yield return new WaitForSeconds(delay);
-            }
-            #endregion
-        }
-
-        /// <summary>
-        /// Show the game over screen
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator ShowGameOverScreen()
-        {
-            yield return new WaitForSeconds(2 * FallTime);
-            if(!isTest)
-                ScoreSystem.SaveHighScore(GameData.SelectedMusic);
-            GameOverScreen.GetComponent<UIController>().Show();
-            FinalScoreText.text = "Skor akhir: " + ScoreSystem.Score.ToString();
         }
 
         /// <summary>
@@ -375,16 +309,7 @@ namespace MathBeat.Game
                 Application.Quit();
 #endif
             }
-                
-        }
 
-        /// <summary>
-        /// Send a <see cref="GameObject"/> back to <see cref="ObjectPool"/>  
-        /// </summary>
-        /// <param name="obj"></param>
-        public void DisposeBlock(GameObject obj)
-        {
-            cache.ReturnObject(obj);
         }
 
         /// <summary>
@@ -403,7 +328,7 @@ namespace MathBeat.Game
             GameLog.Debug("Loading audio at " + DateTime.Now);
             // load the audio file
             // note: ignore extension
-            music2Play = Resources.Load<AudioClip>(GameHandler.RAW_PATH + MusicData.FileNameNoExt);
+            music2Play = Resources.Load<AudioClip>(GameHandler.RAW_PATH + MusicData.FileName);
             switch (music2Play.loadState)
             {
                 case AudioDataLoadState.Unloaded:
@@ -422,37 +347,13 @@ namespace MathBeat.Game
                     break;
             }
             GameLog.Debug("Loading {0}...", music2Play);
-            if (music2Play.LoadAudioData())
+            if (music2Play.LoadAudioData() /* is a success */)
                 Music.clip = music2Play;
             else
                 GameLog.Error("Unable to load {0}!", music2Play);
         }
 
-        //void PauseGame(bool pause)
-        //{
-        //    GameLog.DebugLog("Game paused = " + pause.ToString());
-        //    switch (pause)
-        //    {
-        //        case true:
-        //            Music.Pause();
-        //            PausePanel.Show();
-        //            break;
-        //        case false:
-        //            Time.timeScale = 1;
-        //            PausePanel.Hide();
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
-        //
-        //public void OnGamePaused()
-        //{
-        //    Time.timeScale = 0;
-        //}
-        //public void OnGameUnpaused()
-        //{
-        //    Time.timeScale = 1;
-        //}
     }
 }
+
+

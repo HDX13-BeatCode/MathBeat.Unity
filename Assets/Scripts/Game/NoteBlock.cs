@@ -34,7 +34,7 @@ namespace MathBeat.Game
             //preparing Rigidbody2D to simulate fall
             rgbd = GetComponent<Rigidbody2D>();
             Speed = MainGame.Speed;
-            Difficulty = MainGame.Difficulty;
+            Difficulty = MainGame.QuestionDifficulty;
             LoadQuestion(Difficulty);
         }
 
