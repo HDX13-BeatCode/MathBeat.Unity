@@ -25,7 +25,6 @@ namespace MathBeat.Game
         [Header("Text Views")]
         public Text ScoreText;
         public Text MultiplierText,
-                    HighScoreText,
                     HitStatusText,
                     ChainStatusText,
                     ChainText;
@@ -34,7 +33,7 @@ namespace MathBeat.Game
 
         public Dictionary<HitType, int> HitCounters;
 
-        private const string highScorePrefsFormat = "HighScore[{0}]";
+        
         private Main main;
         private HitType hitStatus = HitType.Miss;
         private Coroutine coroutine;
@@ -108,7 +107,8 @@ namespace MathBeat.Game
             switch (errorCode)
             {
                 case CODE_HIT:
-                    HitCounters[HitType.Correct]++;
+                    if(tag == "Question")
+                        HitCounters[HitType.Correct]++;
                     if (hitPoints <= THRESHOLD_PERFECT)
                     {
                         hitX = 1f;
@@ -135,11 +135,6 @@ namespace MathBeat.Game
                     _points = Mathf.RoundToInt(_basePoints * Multiplier * hitX);
                     Log.Debug(hitStatus.ToString() + "! Got " + _points + " points!");
                     main.PlayFX("Correct");
-                    break;
-
-                case CODE_OFF:
-                    Log.Debug("Miss! Multiplier reset.");
-                    main.PlayFX("OffBeat");
                     break;
 
                 case CODE_MISS:
@@ -173,27 +168,36 @@ namespace MathBeat.Game
             MultiplierText.text = System.Math.Round(Multiplier, 2).ToString() + "x";
             ChainText.text = Chain.ToString();
             ChainStatusText.text = Chain > 1 ? Chain.ToString() : string.Empty;
-            HitStatusText.text = hitStatus.ToString();
+            HitStatusText.text = GetStatus_ID(hitStatus);
             StatusBox.Show();
             yield return new WaitForSeconds(1);
             StatusBox.Hide();
             coroutineRunning = false;
         }
 
-        public void LoadHighScore(int musicId)
+        string GetStatus_ID(HitType hitstat)
         {
-            string key = string.Format(highScorePrefsFormat, musicId);
-            HighScore = PlayerPrefs.GetInt(key);
-        }
-
-        public void SaveHighScore(int musicId)
-        {
-            string key = string.Format(highScorePrefsFormat, musicId);
-            if (Score > HighScore)
+            switch (hitstat)
             {
-                PlayerPrefs.SetInt(key, Score);
+                case HitType.Wrong:
+                    return "Salah";
+                case HitType.Bad:
+                    return "Kurang";
+                case HitType.Miss:
+                    return "Lepas";
+                case HitType.Perfect:
+                    return "Mantap";
+                case HitType.Great:
+                    return "Bagus";
+                case HitType.Good:
+                    return "OK";
+                case HitType.Correct:
+                    return "Benar";
+                default:
+                    return string.Empty;
             }
         }
+        
 
     }
 }

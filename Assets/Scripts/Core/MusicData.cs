@@ -36,11 +36,20 @@ namespace MathBeat.Core
         /// <summary>
         /// Beat map data list/array
         /// </summary>
-        public BeatMapData[] MapData { get; set; }
+        public List<BeatMapData> MapData { get; set; }
 
+        /// <summary>
+        /// Returns "<see cref="Artist"/> - <see cref="Title"/>"
+        /// </summary>
+        /// <returns>Returns "<see cref="Artist"/> - <see cref="Title"/>"</returns>
         public override string ToString()
         {
-            return string.Format("{0} - {1}", Title, Artist);
+            return string.Format("{0} - {1}", Artist, Title);
+        }
+
+        public MusicData()
+        {
+            MapData = new List<BeatMapData>();
         }
     }
 
@@ -51,6 +60,13 @@ namespace MathBeat.Core
         public MusicList()
         {
             MusicData = new List<MusicData>();
+        }
+        public MusicData this[string title]
+        {
+            get
+            {
+                return MusicData.Where(data => data.Title == title).Single();
+            }
         }
     }
 

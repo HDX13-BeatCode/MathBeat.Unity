@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,9 +24,11 @@ namespace MathBeat.Core
 
         public Log GameLogger;
 
-        public int Difficulty;
+        public int GameDifficulty;
+        public int QuestionDifficulty;
         public int GameSpeed;
 
+        #region CONSTS
         /// <summary>
         /// /Resources/
         /// </summary>
@@ -56,10 +59,13 @@ namespace MathBeat.Core
         [HideInInspector]
         const string JSON_MUSIC = "MusicData";
 
+        private const string highScorePrefsFormat = "HighScore[{0}]";
+
+        #endregion
         /// <summary>
         /// The index of currently selected music
         /// </summary>
-        public int SelectedMusic;
+        public MusicData SelectedMusic;
 
         public GameHandler()
         {
@@ -90,7 +96,7 @@ namespace MathBeat.Core
 
         public MusicData GetCurrentMusic()
         {
-            return MusicList.MusicData[SelectedMusic];
+            return SelectedMusic;
         }
 
         /// <summary>
@@ -109,11 +115,45 @@ namespace MathBeat.Core
 
         private void LoadAllMusicData()
         {
-            TextAsset[] musicJSONs = Resources.LoadAll<TextAsset>(JSON_PATH);
-            foreach (var json in musicJSONs)
+            TextAsset[] JSONs = Resources.LoadAll<TextAsset>(JSON_PATH);
+            var musicJson = JSONs.Where(text => text.text.StartsWith("/* MUSIC DATA */"));
+            foreach (var json in musicJson)
             {
-                MusicList.MusicData.Add(JsonConvert.DeserializeObject<MusicData>(json.text));
+                MusicList.MusicData.Add(
+                    JsonConvert.DeserializeObject<MusicData>(json.text)
+                );
             }
+        }
+
+        /// <summary>
+        /// Unload the audio from memory
+        /// </summary>
+        public static void UnloadAudio(AudioClip audio)
+        {
+            if(audio.loadState == AudioDataLoadState.Loaded)
+                audio.UnloadAudioData();
+        }
+
+        /// <summary>
+        /// Load the audio to memory
+        /// </summary>
+        public static AudioClip LoadAudio(string audioName)
+        {
+            AudioClip audio;
+            Log.Debug("Loading audio at " + DateTime.Now);
+            // load the audio file
+            // note: ignore extension
+            audio = Resources.Load<AudioClip>(RAW_PATH + audioName);
+            Log.Debug("{0} {1}...", audio.name, audio.loadState);
+
+            Log.Debug("Loading {0}...", audio);
+            if (audio.LoadAudioData() /* is a success */)
+                return audio;
+            else
+            {
+                Log.Error("Unable to load {0}!", audio.name);
+                return null;
+            }     
         }
 
         //Update is called once per frame
@@ -121,6 +161,21 @@ namespace MathBeat.Core
         //{
 
         //}
+
+        public static int LoadHighScore(string title)
+        {
+            string key = string.Format(highScorePrefsFormat, title);
+            return PlayerPrefs.GetInt(key);
+        }
+
+        public static void SaveHighScore(string title, int score)
+        {
+            string key = string.Format(highScorePrefsFormat, title);
+            if (score > LoadHighScore(title))
+            {
+                PlayerPrefs.SetInt(key, score);
+            }
+        }
 
     }
 }

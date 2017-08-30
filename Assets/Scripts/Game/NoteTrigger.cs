@@ -6,7 +6,7 @@ namespace MathBeat.Game
     public class NoteTrigger : MonoBehaviour
     {
         GameObject currentBeat;
-        Queue<GameObject> beatQueue;
+        //Queue<GameObject> beatQueue;
         [SerializeField]
         float triggerCenter = 0f;
         Scoring ScoreSystem;
@@ -19,38 +19,42 @@ namespace MathBeat.Game
         void Start()
         {
             ScoreSystem = FindObjectOfType<Scoring>();
-            beatQueue = new Queue<GameObject>();
+            //beatQueue = new Queue<GameObject>();
         }
 
         // Update is called once per frame
         void Update()
         {
             if (isTriggered)
+            {
                 if (currentBeat != null)
                 {
                     SendHit();
                     Recycler.ReturnObject(currentBeat);
-                } 
+                }
+                isTriggered = false;
+            }
+                 
         }
 
         private void OnTriggerEnter2D(Collider2D obj)
         {
             if (obj.gameObject.CompareTag(TAG))
             {
-                beatQueue.Enqueue(obj.gameObject);
-                currentBeat = beatQueue.Peek();
+                //beatQueue.Enqueue(obj.gameObject);
+                currentBeat = obj.gameObject;
             }     
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            if (beatQueue.Count > 0)
-            {
-                beatQueue.Dequeue();
-                if (beatQueue.Count > 0)
-                    currentBeat = beatQueue.Peek();
-            }
-            else
+            //if (beatQueue.Count > 0)
+            //{
+            //    beatQueue.Dequeue();
+            //    if (beatQueue.Count > 0)
+            //        currentBeat = beatQueue.Peek();
+            //}
+            //else
                 currentBeat = null;
             isTriggered = false;
         }

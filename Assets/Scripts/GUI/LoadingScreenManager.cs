@@ -53,7 +53,7 @@ namespace MathBeat.GUI
         public static string sceneName = "";
 
         // IMPORTANT! This is the build index of your loading scene. You need to change this to match your actual scene index
-        static int loadingSceneIndex = 5;
+        static int loadingSceneIndex = 4;
         float timer;
 
         void Start()

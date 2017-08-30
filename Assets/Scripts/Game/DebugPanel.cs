@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Text;
+using System.Linq;
 using System.IO;
 using System;
 
@@ -32,19 +33,13 @@ namespace MathBeat.Game
             if (type == LogType.Error || type == LogType.Exception)
             {
 #endif
-            if (DebugText.text.Length > 128)
-            {
-                StringBuilder logEditor = new StringBuilder();
-                logEditor.Append(DebugText.text);
-                logEditor.Remove(0, DebugText.text.IndexOf('\n'));
-                logEditor.AppendLine(message);
-                DebugText.text = logEditor.ToString();
+                if (DebugText.text.Length > 100)
+                {
+                    DebugText.text = string.Empty;
+                }
+                
+                DebugText.text += message + "\n"; 
             }
-            else
-            {
-                DebugText.text += message + "\n";
-            }
-        }
 #if !UNITY_EDITOR
         }
 #endif

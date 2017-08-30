@@ -20,9 +20,8 @@ namespace MathBeat.Game
         #region DEBUG
         [Header("DEBUG")]
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        [SerializeField]
         //private float lastNoteTime = 0;
-        public DebugPanel DebugPanel;
+        // public DebugPanel DebugPanel;
 
 #endif
         private bool isTest = true;
@@ -41,8 +40,6 @@ namespace MathBeat.Game
             BeatSnap = (int)BeatValueType.Beat,
             BeatMap = new string[] { "1130 1120", "1130 1120", "1131 1121", "1131 1121" }
         };
-
-
 
         #endregion DEBUG
 
@@ -65,7 +62,7 @@ namespace MathBeat.Game
         /// <summary>
         /// The data of currently playing music
         /// </summary>
-        public MusicData MusicData;
+        public MusicData NowPlaying;
 
         public QuizSystem QuizData;
 
@@ -115,6 +112,9 @@ namespace MathBeat.Game
 
         public GameObject PausePanel;
 
+        public BeatPinger Pinger;
+
+        public GUI.FinalPanel FinalPanel;
         // Events
         /// <summary>
         /// What to do when the game is paused?
@@ -154,13 +154,15 @@ namespace MathBeat.Game
                 music2Play = FindObjectOfType<AudioClip>();
 
                 // preparing data
-                MusicData = GameData.GetCurrentMusic();
+                NowPlaying = GameData.GetCurrentMusic();
                 QuizData = GameData.QuizSystem;
                 Speed = GameData.GameSpeed;
-                QuestionDifficulty = GameData.Difficulty;
+                GameDifficulty = GameData.GameDifficulty;
+                QuestionDifficulty = GameData.QuestionDifficulty;
                 isTest = false;
 
-                LoadAudio();
+                music2Play = GameHandler.LoadAudio(NowPlaying.FileName);
+                Music.clip = music2Play;
             }
             #endregion
             #region TestTrack
@@ -173,13 +175,13 @@ namespace MathBeat.Game
                 // no more FileName on MusicData
                 isTest = true;
                 GameDifficulty = 0; // because I only have one BeatMapData: testMap
-                MusicData = new MusicData()
+                NowPlaying = new MusicData()
                 {
                     Title = "TestTrack",
                     Artist = "<unknown/>", // dat html/xml!
                     BPM = 120,
                     Offset = testOffset,
-                    MapData = new BeatMapData[] { testMap }
+                    MapData = new List<BeatMapData>() { testMap }
                 };
                 QuizData.Quiz = GameHandler.LoadJSON<List<Quiz>>("Quiz");
 
@@ -190,24 +192,27 @@ namespace MathBeat.Game
             {
                 //these lines will be executed no matter what
                 Syncer = Music.GetComponent<AudioSync>();
+                Pinger = Music.GetComponent<BeatPinger>();
                 ScoreSystem = FindObjectOfType<Scoring>();
                 Spawner = FindObjectOfType<BlockSpawner>();
-                Spawner.MapData = MusicData.MapData[GameDifficulty].Maps;
+                FinalPanel = GameOverScreen.GetComponent<GUI.FinalPanel>();
+                Spawner.MapData = NowPlaying.MapData[GameDifficulty].Maps;
                 Spawner.Speed = Speed;
                 if (!isTest)
-                    ScoreSystem.LoadHighScore(GameData.SelectedMusic);
+                    ScoreSystem.HighScore = GameHandler.LoadHighScore(NowPlaying.Title);
 
                 // preparing latency
-                Syncer.BPM = MusicData.BPM;
-                lateStart = MusicData.Offset > 0;
+                Pinger.BeatValue = NowPlaying.MapData[GameDifficulty].Snap;
+                Syncer.BPM = NowPlaying.BPM;
+                lateStart = NowPlaying.Offset > 0;
                 FallTime = (Spawner.Position - Spawner.TriggerPoint) / Speed;
                 Spawner.FallTime = FallTime;
                 Syncer.TimeOffset = FallTime;
 
                 if (lateStart)
-                    Music.GetComponent<BeatPinger>().OffsetTime = MusicData.Offset;
+                    Pinger.OffsetTime = NowPlaying.Offset;
                 else
-                    Syncer.TimeOffset += -MusicData.Offset;
+                    Syncer.TimeOffset += -NowPlaying.Offset;
             }
             #endregion
         }
@@ -219,6 +224,20 @@ namespace MathBeat.Game
         void Start()
         {
             IsPlaying = true;
+        }
+
+        ///<summary>
+        ///Update is called once per frame
+        ///</summary> 
+        void Update()
+        {
+            if (!gameOver)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Pause(IsPlaying);
+                }
+            }
         }
 
         #region EventHandling
@@ -264,26 +283,14 @@ namespace MathBeat.Game
         {
             //yield return new WaitForSeconds(2 * FallTime);
             if (!isTest)
-                ScoreSystem.SaveHighScore(GameData.SelectedMusic);
+                GameHandler.SaveHighScore(NowPlaying.Title, ScoreSystem.Score);
             GameOverScreen.GetComponent<UIController>().Show();
-            FinalScoreText.text = "Skor akhir: " + ScoreSystem.Score.ToString();
+            FinalPanel.SetTexts();
+            
+            
         }
 
         #endregion
-
-        ///<summary>
-        ///Update is called once per frame
-        ///</summary> 
-        void Update()
-        {
-            if (!gameOver)
-            {
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    Pause(IsPlaying);
-                }
-            }
-        }
         #endregion
 
         public void PlayFX(string fxName)
@@ -298,7 +305,7 @@ namespace MathBeat.Game
         {
             if (!isTest)
             {
-                UnloadAudio();
+                GameHandler.UnloadAudio(Music.clip);
                 GUI.Initiate.Fade("Menu", Color.white, 0.7f);
             }
             else
@@ -310,47 +317,6 @@ namespace MathBeat.Game
 #endif
             }
 
-        }
-
-        /// <summary>
-        /// Unload the audio from memory
-        /// </summary>
-        void UnloadAudio()
-        {
-            music2Play.UnloadAudioData();
-        }
-
-        /// <summary>
-        /// Load the audio to memory
-        /// </summary>
-        void LoadAudio()
-        {
-            GameLog.Debug("Loading audio at " + DateTime.Now);
-            // load the audio file
-            // note: ignore extension
-            music2Play = Resources.Load<AudioClip>(GameHandler.RAW_PATH + MusicData.FileName);
-            switch (music2Play.loadState)
-            {
-                case AudioDataLoadState.Unloaded:
-                    GameLog.Debug(music2Play.ToString() + "is not loaded.");
-                    break;
-                case AudioDataLoadState.Loading:
-                    GameLog.Debug(music2Play.ToString() + "is loading.");
-                    break;
-                case AudioDataLoadState.Loaded:
-                    GameLog.Debug(music2Play.ToString() + "is loaded.");
-                    break;
-                case AudioDataLoadState.Failed:
-                    Debug.LogError(music2Play.ToString() + "failed to load.");
-                    break;
-                default:
-                    break;
-            }
-            GameLog.Debug("Loading {0}...", music2Play);
-            if (music2Play.LoadAudioData() /* is a success */)
-                Music.clip = music2Play;
-            else
-                GameLog.Error("Unable to load {0}!", music2Play);
         }
 
     }

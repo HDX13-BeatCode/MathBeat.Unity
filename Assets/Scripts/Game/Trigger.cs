@@ -36,7 +36,7 @@ namespace MathBeat.Game
         /// </summary>
         private GameObject currentBeat;
 
-        private Queue<GameObject> beatQueue;
+        //private Queue<GameObject> beatQueue;
 
         /// <summary>
         /// The center of the trigger area (define manually)
@@ -52,7 +52,7 @@ namespace MathBeat.Game
             ScoreSystem = FindObjectOfType<Scoring>();
             Recycler = FindObjectOfType<ObjectPool>();
             triggerCenter = FindObjectOfType<BlockSpawner>().TriggerPoint;
-            beatQueue = new Queue<GameObject>();
+            //beatQueue = new Queue<GameObject>();
             currentBeat = null;
         }
 
@@ -66,10 +66,11 @@ namespace MathBeat.Game
                     if (currentBeat.CompareTag("Question"))
                     {
                         CheckAnswer(currentBeat);
-                        Recycler.ReturnObject(currentBeat);
+                        //Recycler.ReturnObject(currentBeat);
                         //currentBeat = null;
-                    }    
+                    }
                 }
+                isTriggered=false;
             }
         }
 
@@ -78,8 +79,7 @@ namespace MathBeat.Game
             Log.Debug("Hit now!");
             if (obj.gameObject.CompareTag("Question"))
             {
-                beatQueue.Enqueue(obj.gameObject);
-                currentBeat = beatQueue.Peek();
+                currentBeat = obj.gameObject;
             }
 
         }
@@ -87,17 +87,17 @@ namespace MathBeat.Game
         private void OnTriggerExit2D(Collider2D collision)
         {
             //Debug.Break();
-            Log.Debug("Block is out of trigger!");
+            //Log.Debug("Block is out of trigger!");
             
-            if (beatQueue.Count > 0)
-            {
-                beatQueue.Dequeue();
-                if (beatQueue.Count > 0)
-                    currentBeat = beatQueue.Peek();
-            }
-            else
+            //if (beatQueue.Count > 0)
+            //{
+            //    beatQueue.Dequeue();
+            //    if (beatQueue.Count > 0)
+            //        currentBeat = beatQueue.Peek();
+            //}
+            //else
                 currentBeat = null;
-            isTriggered = false;
+            //isTriggered = false;
         }
 
         private void CheckAnswer(GameObject block)
@@ -113,7 +113,8 @@ namespace MathBeat.Game
             else
             {
                 ScoreSystem.Respond(Scoring.CODE_WRONG);
-            }  
+            }
+            Recycler.ReturnObject(block);
         }
 
         public bool IsCorrect(NoteBlock answer, int ansId)

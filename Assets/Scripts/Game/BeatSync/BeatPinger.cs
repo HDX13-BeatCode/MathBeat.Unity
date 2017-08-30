@@ -40,7 +40,7 @@ namespace MathBeat.Game.BeatSync
             freq = Audio.clip.frequency;
 
             // setting _period and _offset
-            _period = (60f / audioBpm * Values.Values[(int)BeatValue] + Latency / 1000) * freq;
+            _period = (60f / (audioBpm * Values.Values[(int)BeatValue]) + Latency / 1000) * freq;
             _offset = OffsetTime * freq;
 
             // logging the details
@@ -75,7 +75,7 @@ namespace MathBeat.Game.BeatSync
             //StartCoroutine(PingAsync());
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Sets the current position in samples
             // with the position of the currently playing audio.

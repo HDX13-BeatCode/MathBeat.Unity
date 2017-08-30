@@ -64,7 +64,7 @@ namespace MathBeat.Game
             //StartCoroutine(Spawn(currentBeat));
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (isPlaying)
                 if (Observer.IsActive)
@@ -88,6 +88,7 @@ namespace MathBeat.Game
 
             if (MapData[currentBeat] != BeatType.None)
                 Debug.LogFormat("{0} is {1}, {2} s after start", currentBeat, MapData[currentBeat], Time.realtimeSinceStartup);
+            else yield break;
 
             switch (MapData[currentBeat])
             {

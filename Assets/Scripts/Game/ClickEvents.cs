@@ -10,6 +10,7 @@ namespace MathBeat.Game
     {
         public Core.GameHandler GameData;
         public Slider SliderDifficulty, SliderSpeed;
+        public AudioSource BGAudio;
         public int MainSceneID;
 
         Animator _anim;
@@ -36,15 +37,15 @@ namespace MathBeat.Game
 #endif
         }
 
-        public void SetDifficulty(int musicId)
+        public void SetDifficulty(string title)
         {
-            GameData.SelectedMusic = musicId;
+            GameData.SelectedMusic = GameData.MusicList[title];
             SwitchScreen(4);
         }
 
         public void StartGame()
         {
-            GameData.Difficulty = (int)SliderDifficulty.value;
+            GameData.QuestionDifficulty = (int)SliderDifficulty.value;
             GameData.GameSpeed = (int)SliderSpeed.value;
             Initiate.Fade("Main", Color.black, 1f, true);
         }
@@ -64,6 +65,7 @@ namespace MathBeat.Game
                     break;
                 case 4:
                     _anim.SetTrigger("SetDifficulty");
+                    BGAudio.PlayOneShot(Core.GameHandler.LoadAudio(GameData.SelectedMusic.FileName));
                     break;
                 case -1:
                     _anim.SetTrigger("Select2Main");
@@ -80,11 +82,6 @@ namespace MathBeat.Game
                 default:
                     break;
             }
-        }
-
-        public void SwitchScreen(string animName)
-        {
-            _anim.SetTrigger(animName);
         }
 
         public void SaveSettings()
