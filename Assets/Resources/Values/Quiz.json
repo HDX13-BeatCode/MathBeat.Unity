@@ -1,0 +1,702 @@
+﻿[{
+    "Difficulty": 1,
+    "Question": "1 + 1",
+    "Answers": {
+      "Correct": "2",
+      "Others": ["1", "3", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 2",
+    "Answers": {
+      "Correct": "3",
+      "Others": ["1", "2", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 3",
+    "Answers": {
+      "Correct": "4",
+      "Others": ["2", "3", "5", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 4",
+    "Answers": {
+      "Correct": "5",
+      "Others": ["2", "3", "4", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 5",
+    "Answers": {
+      "Correct": "6",
+      "Others": ["3", "4", "5", "7", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 6",
+    "Answers": {
+      "Correct": "7",
+      "Others": ["3", "4", "5", "6", "8", "9"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 7",
+    "Answers": {
+      "Correct": "8",
+      "Others": ["4", "5", "6", "7", "9"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 8",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["6", "7", "8", "10", "5"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "1 + 9",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["6", "7", "8", "9", "11", "12"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "1 + 10",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["10", "7", "8", "9", "12"]
+    }
+  },{
+    "Difficulty": 1,
+    "Question": "2 + 1",
+    "Answers": {
+      "Correct": "3",
+      "Others": ["1", "2", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "2 + 2",
+    "Answers": {
+      "Correct": "4",
+      "Others": ["1", "2", "3", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "2 + 3",
+    "Answers": {
+      "Correct": "5",
+      "Others": ["2", "3", "4", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "2 + 4",
+    "Answers": {
+      "Correct": "6",
+      "Others": ["2", "3", "4", "5", "7", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "2 + 5",
+    "Answers": {
+      "Correct": "7",
+      "Others": ["3", "4", "5", "6", "8", "9"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "2 + 6",
+    "Answers": {
+      "Correct": "8",
+      "Others": ["4", "5", "6", "7", "9", "10"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "2 + 7",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["10", "5", "6", "7", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "2 + 8",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["6", "7", "8", "9", "11"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "2 + 9",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["6", "7", "8", "9", "10", "12"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "2 + 10",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["11", "8", "9", "10", "13"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 1",
+    "Answers": {
+      "Correct": "4",
+      "Others": ["2", "3", "1", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 2",
+    "Answers": {
+      "Correct": "5",
+      "Others": ["2", "4", "3", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 3",
+    "Answers": {
+      "Correct": "6",
+      "Others": ["2", "3", "5", "4", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 4",
+    "Answers": {
+      "Correct": "7",
+      "Others": ["8", "3", "4", "6", "5"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 5",
+    "Answers": {
+      "Correct": "8",
+      "Others": ["9", "3", "5", "7", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 6",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["3", "11", "5", "6", "8", "10"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 7",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["11", "12", "6", "7", "9"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 8",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["9", "6", "8", "10", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 9",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["14", "7", "8", "9", "11", "13"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "3 + 10",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["10", "14", "8", "9", "12", "15"]
+    }
+  },{
+    "Difficulty": 1,
+    "Question": "4 + 1",
+    "Answers": {
+      "Correct": "5",
+      "Others": ["7", "8", "4", "3", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 2",
+    "Answers": {
+      "Correct": "6",
+      "Others": ["7", "8", "3", "5", "4"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 3",
+    "Answers": {
+      "Correct": "7",
+      "Others": ["8", "9", "4", "6", "9"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 4",
+    "Answers": {
+      "Correct": "8",
+      "Others": ["4", "5", "6", "7", "9", "10"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 5",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["11", "4", "5", "6", "8", "10"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 6",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["7", "12", "6", "7", "9", "11"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 7",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["10", "9", "6", "7", "8", "11", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 8",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["6", "7", "8", "9", "11"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 9",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["6", "7", "8", "9", "10", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "4 + 10",
+    "Answers": {
+      "Correct": "14",
+      "Others": ["11", "15", "16", "10", "13"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 1",
+    "Answers": {
+      "Correct": "6",
+      "Others": ["7", "9", "4", "5", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 2",
+    "Answers": {
+      "Correct": "7",
+      "Others": ["8", "9", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 3",
+    "Answers": {
+      "Correct": "8",
+      "Others": ["10", "9", "11", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 4",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["10", "11", "6", "8", "7", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 5",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["9", "12", "11", "7", "8", "5"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 6",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["12", "10", "5", "6", "8", "9", "13"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 7",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["4", "5", "6", "7", "9"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "5 + 8",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["6", "7", "8", "10", "5"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 9",
+    "Answers": {
+      "Correct": "14",
+      "Others": ["6", "7", "8", "9", "11", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "5 + 10",
+    "Answers": {
+      "Correct": "15",
+      "Others": ["10", "7", "8", "9", "12"]
+    }
+  },{
+    "Difficulty": 1,
+    "Question": "6 + 1",
+    "Answers": {
+      "Correct": "7",
+      "Others": ["1", "2", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "6 + 2",
+    "Answers": {
+      "Correct": "8",
+      "Others": ["1", "2", "3", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "6 + 3",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["2", "3", "4", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "6 + 4",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["2", "3", "4", "5", "7", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "6 + 5",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["3", "4", "5", "6", "8", "9"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "6 + 6",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["4", "5", "6", "7", "9", "10"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "6 + 7",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["10", "5", "6", "7", "8"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "6 + 8",
+    "Answers": {
+      "Correct": "14",
+      "Others": ["6", "7", "8", "9", "11"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "6 + 9",
+    "Answers": {
+      "Correct": "15",
+      "Others": ["6", "7", "8", "9", "10", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "6 + 10",
+    "Answers": {
+      "Correct": "16",
+      "Others": ["11", "8", "9", "10", "13"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "7 + 1",
+    "Answers": {
+      "Correct": "8",
+      "Others": ["1", "3", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "7 + 2",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["1", "2", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "7 + 3",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["2", "3", "5", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "7 + 4",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["2", "3", "4", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "7 + 5",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["3", "4", "5", "7", "8"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "7 + 6",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["3", "4", "5", "6", "8", "9"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "7 + 7",
+    "Answers": {
+      "Correct": "14",
+      "Others": ["4", "5", "6", "7", "9"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "7 + 8",
+    "Answers": {
+      "Correct": "15",
+      "Others": ["6", "7", "8", "10", "5"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "7 + 9",
+    "Answers": {
+      "Correct": "16",
+      "Others": ["6", "7", "8", "9", "11", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "7 + 10",
+    "Answers": {
+      "Correct": "17",
+      "Others": ["10", "7", "8", "9", "12"]
+    }
+  },{
+    "Difficulty": 1,
+    "Question": "8 + 1",
+    "Answers": {
+      "Correct": "9",
+      "Others": ["1", "2", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "8 + 2",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["1", "2", "3", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "8 + 3",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["2", "3", "4", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "8 + 4",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["2", "3", "4", "5", "7", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "8 + 5",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["3", "4", "5", "6", "8", "9"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "8 + 6",
+    "Answers": {
+      "Correct": "14",
+      "Others": ["4", "5", "6", "7", "9", "10"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "8 + 7",
+    "Answers": {
+      "Correct": "15",
+      "Others": ["10", "5", "6", "7", "8"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "8 + 8",
+    "Answers": {
+      "Correct": "16",
+      "Others": ["6", "7", "8", "9", "11"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "8 + 9",
+    "Answers": {
+      "Correct": "17",
+      "Others": ["6", "7", "8", "9", "10", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "8 + 10",
+    "Answers": {
+      "Correct": "18",
+      "Others": ["11", "8", "9", "10", "13"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "9 + 1",
+    "Answers": {
+      "Correct": "10",
+      "Others": ["1", "3", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "9 + 2",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["1", "2", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "9 + 3",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["2", "3", "5", "6", "7"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "9 + 4",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["2", "3", "4", "6", "7"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "9 + 5",
+    "Answers": {
+      "Correct": "14",
+      "Others": ["3", "4", "5", "7", "8"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "9 + 6",
+    "Answers": {
+      "Correct": "15",
+      "Others": ["3", "4", "5", "6", "8", "9"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "9 + 7",
+    "Answers": {
+      "Correct": "16",
+      "Others": ["4", "5", "6", "7", "9"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "9 + 8",
+    "Answers": {
+      "Correct": "17",
+      "Others": ["6", "7", "8", "10", "5"]
+    }
+  }, {
+    "Difficulty": 2,
+    "Question": "9 + 9",
+    "Answers": {
+      "Correct": "18",
+      "Others": ["6", "7", "8", "9", "11", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "9 + 10",
+    "Answers": {
+      "Correct": "19",
+      "Others": ["10", "7", "8", "9", "12"]
+    }
+  },{
+    "Difficulty": 1,
+    "Question": "10 + 1",
+    "Answers": {
+      "Correct": "11",
+      "Others": ["1", "2", "4", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 2",
+    "Answers": {
+      "Correct": "12",
+      "Others": ["1", "2", "3", "5", "6"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 3",
+    "Answers": {
+      "Correct": "13",
+      "Others": ["2", "3", "4", "6", "7"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 4",
+    "Answers": {
+      "Correct": "14",
+      "Others": ["2", "3", "4", "5", "7", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 5",
+    "Answers": {
+      "Correct": "15",
+      "Others": ["3", "4", "5", "6", "8", "9"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 6",
+    "Answers": {
+      "Correct": "16",
+      "Others": ["4", "5", "6", "7", "9", "10"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 7",
+    "Answers": {
+      "Correct": "17",
+      "Others": ["10", "5", "6", "7", "8"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 8",
+    "Answers": {
+      "Correct": "18",
+      "Others": ["6", "7", "8", "9", "11"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 9",
+    "Answers": {
+      "Correct": "19",
+      "Others": ["6", "7", "8", "9", "10", "12"]
+    }
+  }, {
+    "Difficulty": 1,
+    "Question": "10 + 10",
+    "Answers": {
+      "Correct": "20",
+      "Others": ["11", "8", "9", "10", "13"]
+    }
+  }
+]
