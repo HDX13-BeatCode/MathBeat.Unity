@@ -31,6 +31,7 @@ namespace MathBeat.Game
                 {
                     SendHit();
                     Recycler.ReturnObject(currentBeat);
+                    currentBeat = null;
                 }
                 isTriggered = false;
             }
@@ -68,7 +69,8 @@ namespace MathBeat.Game
 
         public void OnTrigger()
         {
-            isTriggered = true;
+            if (currentBeat != null)
+                isTriggered = true;
         }
     }
 }

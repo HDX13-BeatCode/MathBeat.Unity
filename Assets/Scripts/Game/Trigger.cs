@@ -115,6 +115,7 @@ namespace MathBeat.Game
                 ScoreSystem.Respond(Scoring.CODE_WRONG);
             }
             Recycler.ReturnObject(block);
+            currentBeat = null;
         }
 
         public bool IsCorrect(NoteBlock answer, int ansId)

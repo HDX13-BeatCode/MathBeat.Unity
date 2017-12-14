@@ -18,12 +18,13 @@ namespace MathBeat.Game
     {
         #region Fields
         #region DEBUG
-        [Header("DEBUG")]
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         //private float lastNoteTime = 0;
         // public DebugPanel DebugPanel;
 
 #endif
+        [Header("DEBUG")][SerializeField]
         private bool isTest = true;
         //[SerializeField]
         //private float position = 0f;
@@ -31,20 +32,65 @@ namespace MathBeat.Game
         [SerializeField]
         private float testOffset = 1;
 
+        [SerializeField][Range(0,2)]
+        private float timeScale = 1f;
+
         const int ms = 1000;
 
-        [SerializeField]
-        private BeatMapData testMap = new BeatMapData()
+        private BeatMapData testMapEasy = new BeatMapData()
         {
-            Difficulty = 1,
+            Difficulty = 3,
             BeatSnap = (int)BeatValueType.Beat,
-            BeatMap = new string[] { "1130 1120", "1130 1120", "1131 1121", "1131 1121" }
+            BeatMap = new string[] {
+                "1030 1020", "1030 1020", "1030 1121", "1130 1121",
+                "1130 1120", "1130 1120", "1131 1121", "1131 1121"
+            }
         };
 
-        #endregion DEBUG
+        private BeatMapData testMapMedium = new BeatMapData()
+        {
+            Difficulty = 7,
+            BeatSnap = (int)BeatValueType.HalfBeat,
+            BeatMap = new string[] {
+                "1010",
+                "20101010 20101010 20101010 20001010",
+                "20101010 20101010 20101011 20001010",
+                "30101010 20101010 30101010 20001010",
+                "30101010 20101010 30101011 20001010"
+            }
+        };
+
+        private BeatMapData testMapHard = new BeatMapData()
+        {
+            Difficulty = 13,
+            BeatSnap = 5,
+            BeatMap = new string[]
+            {
+                /* Intro */
+                "1000 1000",
+                "2000 1000 1000 1000",
+                "2000 1000 1000 1000",
+                "2000 1000 1000 1000",
+                "2000 1000 1000 1000",      
+                "2000 1000 1000 1000",
+                "2000 1000 1000 1000",
+                "2000 1000 1000 1010",
+                "2000 1000 1000 1000",   
+                "3010 1010 1010 1010",
+                "2010 1010 1010 1010",
+                "3010 1010 1010 1010",
+                "2010 1010 1010 1010",
+                "3010 1010 1010 1010",
+                "2010 1010 1010 1010",
+                "3010 1010 1010 1010",
+                "2010 1010 1010 1010",
+            }
+        };
+
+    #endregion DEBUG
 
         #region GameplayData
-        [Header("Gameplay Data")]
+    [Header("Gameplay Data")]
 
         /// <summary>
         /// The BPM of the track, 
@@ -174,22 +220,28 @@ namespace MathBeat.Game
                 // PS: I've set Taffy as default, so
                 // no more FileName on MusicData
                 isTest = true;
-                GameDifficulty = 0; // because I only have one BeatMapData: testMap
+                // GameDifficulty = 0; // because I only have one BeatMapData: testMap
+                // now I have plenty!
                 NowPlaying = new MusicData()
                 {
                     Title = "TestTrack",
                     Artist = "<unknown/>", // dat html/xml!
                     BPM = 120,
                     Offset = testOffset,
-                    MapData = new List<BeatMapData>() { testMap }
+                    MapData = new List<BeatMapData>() { testMapEasy, testMapMedium, testMapHard }
                 };
                 QuizData.Quiz = GameHandler.LoadJSON<List<Quiz>>("Quiz");
-
+                
             }
             #endregion
             #region Finally
             finally
             {
+                if (isTest)
+                {
+                    Time.timeScale = timeScale;
+                    Music.pitch = timeScale;
+                }
                 //these lines will be executed no matter what
                 Syncer = Music.GetComponent<AudioSync>();
                 Pinger = Music.GetComponent<BeatPinger>();
@@ -273,6 +325,16 @@ namespace MathBeat.Game
                 Music.UnPause();
                 IsPlaying = true;
             }
+        }
+
+        public void UnPauseGame()
+        {
+            Pause(false);
+        }
+
+        private void OnApplicationPause(bool pause)
+        {
+            Pause(pause);
         }
 
         /// <summary>

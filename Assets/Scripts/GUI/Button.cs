@@ -49,7 +49,7 @@ namespace MathBeat.GUI
 
         private void Pause_GameButton(bool isPaused)
         {
-            gameObject.SetActive(!isPaused);
+            enabled = !isPaused;
         }
 
         public void OnPointerDown(PointerEventData args)

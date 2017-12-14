@@ -80,7 +80,7 @@ namespace MathBeat.Game
             {
                 // resets toReturn to its default position
                 // aka the prefab position
-                toReturn.transform.position = prefab.transform.position;
+                toReturn.transform.position = transform.position;
 
                 // disable the instance
                 toReturn.SetActive(false);

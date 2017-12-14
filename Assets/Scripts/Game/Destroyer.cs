@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MathBeat.Game
 {
@@ -8,53 +9,40 @@ namespace MathBeat.Game
         public ObjectPool NoteRecycler, QuestionRecycler;
         public Scoring ScoreSystem;
         [SerializeField]
-        bool destroy = false;
         private GameObject beatBlock;
+        private Queue<GameObject> blocks;
         // Use this for initialization
         void Start()
         {
             ScoreSystem = FindObjectOfType<Scoring>();
+            blocks = new Queue<GameObject>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (destroy)
+            while(blocks.Count > 0)
             {
-#if UNITY_EDITOR
-                //Debug.Break();
-#endif
-                switch (beatBlock.tag)
+                switch (blocks.Peek().tag)
                 {
                     case "Note":
-                        NoteRecycler.ReturnObject(beatBlock);
+                        NoteRecycler.ReturnObject(blocks.Dequeue());
                         break;
                     case "Question":
-                        QuestionRecycler.ReturnObject(beatBlock);
+                        QuestionRecycler.ReturnObject(blocks.Dequeue());
                         break;
                     default:
-                        Destroy(beatBlock);
+                        Destroy(blocks.Dequeue());
                         break;
                 }
                 ScoreSystem.Respond(Scoring.CODE_MISS);
-                destroy = false;
             }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-#if UNITY_EDITOR
-            //Debug.Break();
-#endif
-            destroy = true;
             if (collision.gameObject.CompareTag("Note") || collision.gameObject.CompareTag("Question"))
-                beatBlock = collision.gameObject;
-        }
-
-        private void OnTriggerExit2D(Collider2D collision)
-        {
-            beatBlock = null;
-            destroy = false;
+                blocks.Enqueue(collision.gameObject);
         }
     }
 }

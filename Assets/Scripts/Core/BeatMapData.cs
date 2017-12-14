@@ -162,21 +162,21 @@ namespace MathBeat.Core
 
         public static float[] Values =
         {
-            0f,                          /*None,*/
-            16f,                         /*QuarterStep,*/
-            16f / dotModifier,           /*QuarterDotStep,*/
-            8f,                         /*HalfStep,*/
-            8f / dotModifier,           /*HalfDotStep,*/
-            4f,                         /*Step, QuarterBeat*/
-            4f / dotModifier,           /*DotStep, QuarterDotBeat*/
-            2f,                         /*HalfBeat,*/
-            2f / dotModifier,           /*HalfDotBeat,*/
-            1f,                         /*Beat, QuarterBar*/
-            1f / dotModifier,           /*DotBeat, QuarterDotBar*/
-            .5f,                         /*HalfBar,*/
-            .5f / dotModifier,           /*HalfDotBar,*/
-            .25f,                         /*Bar,*/
-            .25f / dotModifier,           /*DotBar*/
+            0f,                         /* None           (00)               */
+            16f,                        /* QuarterStep    (01)               */
+            16f / dotModifier,          /* QuarterDotStep (02)               */
+            8f,                         /* HalfStep       (03)               */
+            8f / dotModifier,           /* HalfDotStep    (04)               */
+            4f,                         /* Step           (05) QuarterBeat   */
+            4f / dotModifier,           /* DotStep        (06) QuarterDotBeat*/
+            2f,                         /* HalfBeat       (07)               */
+            2f / dotModifier,           /* HalfDotBeat    (08)               */
+            1f,                         /* Beat           (09) QuarterBar    */
+            1f / dotModifier,           /* DotBeat        (10) QuarterDotBar */
+            .5f,                        /* HalfBar        (11)               */
+            .5f / dotModifier,          /* HalfDotBar     (12)               */
+            .25f,                       /* Bar            (13)               */
+            .25f / dotModifier,         /* DotBar         (14)               */
         };
 
         public float this[BeatValueType type]

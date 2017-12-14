@@ -75,7 +75,7 @@ namespace MathBeat.Game.BeatSync
             //StartCoroutine(PingAsync());
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             // Sets the current position in samples
             // with the position of the currently playing audio.
@@ -114,8 +114,101 @@ namespace MathBeat.Game.BeatSync
                 }
 
                 // Wait for PingDelay ms before sending another ping
+                // Can also use WaitForSecondsRealtime (not recommended when pausing the game)
+                // or WaitForFixedUpdate()
                 yield return new WaitForSeconds(PingDelay / 1000f);
             }
         }
+
+        /// <summary>
+        /// Preparing pinger
+        /// </summary>
+        //void Awake()
+        //{
+        //    // preparing variables
+        //    if (Audio == null)
+        //        Audio = FindObjectOfType<AudioSource>();
+        //    Syncer = Audio.GetComponent<AudioSync>();
+        //    float audioBpm = Syncer.BPM;
+        //    freq = Audio.clip.frequency;
+
+        //    // setting _period and _offset
+        //    _period = (60f / (audioBpm * Values.Values[(int)BeatValue]) + Latency / 1000) * freq;
+        //    _offset = OffsetTime * freq;
+
+        //    // logging the details
+        //    Log.Debug("Audio clip {1} is in {0} Hz.", freq, Audio.clip);
+        //    Log.Debug("Period is {0} s / {1} samples", _period / freq, _period);
+        //    Log.Debug("Offset is {0} s / {1} samples", OffsetTime, freq);
+        //}
+
+        ///// <summary>
+        ///// Subscribes Ping to AudioStart event
+        ///// </summary>
+        //public void OnEnable()
+        //{
+        //    Syncer.AudioStart += Ping;
+        //}
+
+        ///// <summary>
+        ///// Unsubscribes Ping from AudioStart event
+        ///// </summary>
+        //public void OnDisable()
+        //{
+        //    Syncer.AudioStart -= Ping;
+        //}
+
+        ///// <summary>
+        ///// Starts the ping coroutine
+        ///// </summary>
+        ///// <param name="syncTime">Init time</param>
+        //public void Ping(double syncTime)
+        //{
+        //    _next = (Audio.time * freq);
+        //    //StartCoroutine(PingAsync());
+        //}
+
+        //private void FixedUpdate()
+        //{
+        //    // Sets the current position in samples
+        //    // with the position of the currently playing audio.
+        //    // This makes it independent from the
+        //    // game's frame rate, which is important.
+        //    _current = Audio.time * freq;
+
+        //    // Compares the current sample with
+        //    // the next sample + offset
+        //    if (_current >= (_next + _offset))
+        //    {
+        //        foreach (var observer in Observers)
+        //            observer.Ping();
+        //        _next += _period;
+        //    }
+        //}
+
+        //public IEnumerator PingAsync()
+        //{
+        //    // keep the coroutine playing...
+        //    while (Audio.isPlaying)
+        //    {
+        //        // Sets the current position in samples
+        //        // with the position of the currently playing audio.
+        //        // This makes it independent from the
+        //        // game's frame rate, which is important.
+        //        _current = AudioSettings.dspTime * freq;
+
+        //        // Compares the current sample with
+        //        // the next sample + offset
+        //        if (_current >= (_next + _offset))
+        //        {
+        //            foreach (var observer in Observers)
+        //                observer.Ping();
+        //            _next += _period;
+        //        }
+
+        //        // Wait for PingDelay ms before sending another ping
+        //        yield return new WaitForSeconds(PingDelay / 1000f);
+        //    }
+        //}
     }
 }
